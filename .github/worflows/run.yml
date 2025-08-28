@@ -1,0 +1,22 @@
+name: Run Testcase Generator
+
+on:
+  workflow_dispatch:   # lets you trigger it manually
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install python-docx
+
+      - name: Run generate_testcases.py
+        run: python generate_testcases.py
