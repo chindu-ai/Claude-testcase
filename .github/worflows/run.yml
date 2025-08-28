@@ -1,11 +1,15 @@
 name: Run Testcase Generator
 
 on:
-  workflow_dispatch:   # lets you trigger it manually
+  workflow_dispatch:   # 👈 enables "Run workflow" button in Actions tab
+  push:                # optional: still runs when you push code
+    branches:
+      - main
 
 jobs:
-  run-script:
+  generate-testcases:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -16,7 +20,19 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
-        run: pip install python-docx
+        run: |
+          pip install python-docx
 
-      - name: Run generate_testcases.py
-        run: python generate_testcases.py
+      - name: Run testcase generator
+        run: |
+          python generate_testcases.py
+
+      - name: Upload generated testcases
+        uses: actions/upload-artifact@v3
+        with:
+          name: generated-testcases
+          path: |
+            *.txt
+            *.md
+            *.csv
+            output/
